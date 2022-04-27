@@ -11,7 +11,7 @@ public class DotEnvUtils {
             .ignoreIfMissing()
             .load();
 
-    public static String getSerpiApiKey() {
-        return dotenv.get("SERPI_API_KEY");
+    public static String getSerpApiKey() {
+        return dotenv.get("SERP_API_KEY");
     }
 }

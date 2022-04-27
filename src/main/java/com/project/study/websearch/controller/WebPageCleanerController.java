@@ -2,7 +2,7 @@ package com.project.study.websearch.controller;
 
 import com.project.study.websearch.dto.GoogleSearchDto;
 import com.project.study.websearch.service.JsoupService;
-import com.project.study.websearch.service.SerpiApiService;
+import com.project.study.websearch.service.SerpApiService;
 import com.project.study.websearch.utils.ConverterUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,7 +21,7 @@ public class WebPageCleanerController {
 
     @GetMapping(value = "/clean", produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> getPageCleanMode(@RequestParam(name = "q") String q) {
-        GoogleSearchDto dto = SerpiApiService.search(q);
+        GoogleSearchDto dto = SerpApiService.search(q);
         if (dto == null || dto.getOrganicResults().isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }

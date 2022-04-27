@@ -1,6 +1,6 @@
 # Web Page Cleaner
 
-This project search web pages in the web by keywords using SERPI API and returns a new page cleaned using Jsoup.
+This project search web pages in the web by keywords using [SERP API](https://wwww.serpapi.com) and returns a new page cleaned using Jsoup.
 
 #### Project setup
 
@@ -12,7 +12,7 @@ cd webpage-cleaner
 ./gradlew clean build
 ```
 
-2. Create a Serpi API account and get the API key.
+2. Create a Serp API account and get the API key.
 
 3. Create an `.env` file in the project root and enter your credentials based on the `.env.example` file.
 
