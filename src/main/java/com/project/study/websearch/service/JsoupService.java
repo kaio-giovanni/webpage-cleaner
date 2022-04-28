@@ -5,12 +5,14 @@ import com.project.study.websearch.utils.ConverterUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +40,7 @@ public class JsoupService {
         }
     }
 
-    public File cleanPage() {
+    public File cleanPageFile() {
         String htmlCode = removeElements();
         return makePageFile(htmlCode);
     }
@@ -64,22 +66,35 @@ public class JsoupService {
     }
 
     public String removeElements() {
+        /*
+         * Allowed list:
+         * a, b, blockquote, br, caption,
+         * cite, code, col, colgroup, dd,
+         * div, dl, dt, em, h1, h2, h3, h4, h5, h6,
+         * i, img, li, ol, p, pre, q, small, span,
+         * strike, strong, sub, sup, table, tbody,
+         * td, tfoot, th, thead, tr, u, ul
+         *
+         * */
+        Element headElement = document.head();
+        headElement.getElementsByTag("script").remove();
         Safelist safelist = Safelist.relaxed()
-                .addTags("main", "div", "a", "p")
-                .addAttributes("main", "style", "class")
-                .addAttributes("div", "style", "class")
-                .addAttributes("a", "style", "class", "href")
-                .addAttributes("p", "style", "class")
-                .removeTags("script", "footer", "iframe", "frame", "br", "hr", "nav");
+                .addTags("main", "section", "article", "style")
+                .addAttributes("main", "style", "class", "id")
+                .addAttributes("section", "style", "class", "id")
+                .addAttributes("article", "style", "class", "id")
+                .addAttributes("div", "class", "id")
+                .addAttributes("a", "style", "class", "id")
+                .addAttributes("p", "style", "class", "id")
+                .removeTags("img");
 
-        Cleaner cleaner = new Cleaner(safelist);
-        return cleaner
-                .clean(document)
-                .outerHtml();
+        Document cleanedDoc = new Cleaner(safelist).clean(document);
+        cleanedDoc.tagName("html").insertChildren(0, headElement);
+        return cleanedDoc.outerHtml();
     }
 
     private File makePageFile(String htmlCode) {
-        LOG.info("Converting document to image...");
+        LOG.info("Converting document to pdf...");
         String baseUri = getDomainName(document.baseUri());
         String fileName = "WebPage_" + baseUri + System.currentTimeMillis();
         File file = ConverterUtils.convertHtmlToPdf(fileName, htmlCode);

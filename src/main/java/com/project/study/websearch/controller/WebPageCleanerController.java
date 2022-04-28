@@ -19,8 +19,8 @@ import java.util.Optional;
 @RequestMapping(value = "/search")
 public class WebPageCleanerController {
 
-    @GetMapping(value = "/clean", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getPageCleanMode(@RequestParam(name = "q") String q) {
+    @GetMapping(value = "/clean-file", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getPageFileInCleanMode(@RequestParam(name = "q") String q) {
         GoogleSearchDto dto = SerpApiService.search(q);
         if (dto == null || dto.getOrganicResults().isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -29,12 +29,20 @@ public class WebPageCleanerController {
         Optional<GoogleSearchDto.OrganicResults> firstResult = dto.getOrganicResults().stream().findFirst();
         if (firstResult.isPresent()) {
             String url = firstResult.get().getLink();
-            File file = new JsoupService(url).cleanPage();
+            File file = new JsoupService(url).cleanPageFile();
             byte[] binary = ConverterUtils.convertFileToByteArray(file);
             return new ResponseEntity<>(binary, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping(value = "/clean-page", produces = MediaType.TEXT_HTML_VALUE)
+    public ResponseEntity<String> getCleanPage(@RequestParam(name = "q") String q) {
+        GoogleSearchDto dto = SerpApiService.mockedData(q);
+        String url = dto.getOrganicResults().stream().findFirst().get().getLink();
+        String htmlCode = new JsoupService(url).removeElements();
+        return new ResponseEntity<>(htmlCode, HttpStatus.OK);
     }
 
 }

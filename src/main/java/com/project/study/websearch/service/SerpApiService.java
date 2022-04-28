@@ -7,6 +7,8 @@ import com.project.study.websearch.utils.DotEnvUtils;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SerpApiService {
 
@@ -29,5 +31,21 @@ public class SerpApiService {
             ex.printStackTrace();
             return null;
         }
+    }
+
+    public static GoogleSearchDto mockedData(String keyWords) {
+        List<GoogleSearchDto.OrganicResults> results = new ArrayList<>();
+        results.add(new GoogleSearchDto.OrganicResults()
+                .setTitle("title")
+//                .setLink("https://www.nytimes.com/live/2022/04/27/world/ukraine-russia-war-news")
+                .setLink("https://noticias.uol.com.br/internacional/ultimas-noticias/2022/04/28/russia-ucrania-28-de-abril-dia-64.htm")
+                .setPosition(1)
+                .setDisplayedLink("https://www.google.com/")
+                .setSnippet("snippet")
+        );
+
+        GoogleSearchDto dto = new GoogleSearchDto();
+        dto.setOrganicResults(results);
+        return dto;
     }
 }

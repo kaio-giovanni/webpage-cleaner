@@ -5,6 +5,7 @@ import com.itextpdf.html2pdf.HtmlConverter;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -16,6 +17,19 @@ public class ConverterUtils {
             ConverterProperties props = new ConverterProperties();
             props.setTagWorkerFactory(new CustomTagWorkerFactory());
             HtmlConverter.convertToPdf(htmlCode, new FileOutputStream(file), props);
+            return file;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
+    public static File writeFile(String fileName, String content) {
+        try {
+            File file = new File(fileName);
+            FileWriter writer = new FileWriter(file);
+            writer.write(content);
+            writer.close();
             return file;
         } catch (IOException ex) {
             ex.printStackTrace();

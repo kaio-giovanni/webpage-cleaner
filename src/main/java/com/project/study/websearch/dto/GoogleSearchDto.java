@@ -32,48 +32,54 @@ public class GoogleSearchDto {
             return position;
         }
 
-        public void setPosition(int position) {
+        public OrganicResults setPosition(int position) {
             this.position = position;
+            return this;
         }
 
         public String getTitle() {
             return title;
         }
 
-        public void setTitle(String title) {
+        public OrganicResults setTitle(String title) {
             this.title = title;
+            return this;
         }
 
         public String getLink() {
             return link;
         }
 
-        public void setLink(String link) {
+        public OrganicResults setLink(String link) {
             this.link = link;
+            return this;
         }
 
         public String getDisplayed_link() {
             return displayed_link;
         }
 
-        public void setDisplayed_link(String displayed_link) {
+        public OrganicResults setDisplayedLink(String displayed_link) {
             this.displayed_link = displayed_link;
+            return this;
         }
 
         public String getSnippet() {
             return snippet;
         }
 
-        public void setSnippet(String snippet) {
+        public OrganicResults setSnippet(String snippet) {
             this.snippet = snippet;
+            return this;
         }
 
-        public String[] getSnippet_highlighted_words() {
+        public String[] getSnippetHighlightedWords() {
             return snippet_highlighted_words;
         }
 
-        public void setSnippet_highlighted_words(String[] snippet_highlighted_words) {
+        public OrganicResults setSnippetHighlightedWords(String[] snippet_highlighted_words) {
             this.snippet_highlighted_words = snippet_highlighted_words;
+            return this;
         }
     }
 }
