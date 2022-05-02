@@ -33,12 +33,12 @@ public class SerpApiService {
         }
     }
 
-    public static GoogleSearchDto mockedData(String keyWords) {
+    public static GoogleSearchDto mockedData() {
         List<GoogleSearchDto.OrganicResults> results = new ArrayList<>();
         results.add(new GoogleSearchDto.OrganicResults()
                 .setTitle("title")
 //                .setLink("https://www.nytimes.com/live/2022/04/27/world/ukraine-russia-war-news")
-                .setLink("https://noticias.uol.com.br/internacional/ultimas-noticias/2022/04/28/russia-ucrania-28-de-abril-dia-64.htm")
+                .setLink("https://www.torcedores.com/noticias/2022/05/diego-ribas-pedido-torcida-flamengo")
                 .setPosition(1)
                 .setDisplayedLink("https://www.google.com/")
                 .setSnippet("snippet")

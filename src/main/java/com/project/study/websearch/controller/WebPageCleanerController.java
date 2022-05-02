@@ -2,6 +2,7 @@ package com.project.study.websearch.controller;
 
 import com.project.study.websearch.dto.GoogleSearchDto;
 import com.project.study.websearch.service.JsoupService;
+import com.project.study.websearch.service.PhantomJsService;
 import com.project.study.websearch.service.SerpApiService;
 import com.project.study.websearch.utils.ConverterUtils;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,8 @@ public class WebPageCleanerController {
         Optional<GoogleSearchDto.OrganicResults> firstResult = dto.getOrganicResults().stream().findFirst();
         if (firstResult.isPresent()) {
             String url = firstResult.get().getLink();
-            File file = new JsoupService(url).cleanPageFile();
+            String htmlCode = new PhantomJsService().getPageSource(url);
+            File file = new JsoupService(htmlCode, url).cleanPageFile();
             byte[] binary = ConverterUtils.convertFileToByteArray(file);
             return new ResponseEntity<>(binary, HttpStatus.OK);
         }
@@ -38,11 +40,16 @@ public class WebPageCleanerController {
     }
 
     @GetMapping(value = "/clean-page", produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity<String> getCleanPage(@RequestParam(name = "q") String q) {
-        GoogleSearchDto dto = SerpApiService.mockedData(q);
-        String url = dto.getOrganicResults().stream().findFirst().get().getLink();
-        String htmlCode = new JsoupService(url).removeElements();
-        return new ResponseEntity<>(htmlCode, HttpStatus.OK);
+    public ResponseEntity<String> getCleanPage() {
+        GoogleSearchDto dto = SerpApiService.mockedData();
+        String url = dto.getOrganicResults()
+                .stream()
+                .findFirst()
+                .get()
+                .getLink();
+        String htmlCode = new PhantomJsService().getPageSource(url);
+        String htmlCleaned = new JsoupService(htmlCode, url).cleanPage();
+        return new ResponseEntity<>(htmlCleaned, HttpStatus.OK);
     }
 
 }

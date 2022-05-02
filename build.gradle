@@ -18,6 +18,12 @@ dependencies {
 	// Jsoup
 	implementation group: 'org.jsoup', name: 'jsoup', version: '1.14.3'
 
+    // Phantomjsdriver
+    implementation group: 'com.codeborne', name: 'phantomjsdriver', version: '1.4.4'
+
+    // selenium
+    implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+
 	// okhttp
 	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.0'
 
