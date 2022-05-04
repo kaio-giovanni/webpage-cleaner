@@ -73,7 +73,7 @@ public class JsoupService {
                 .addAttributes("li", "style", "class", "id")
                 .removeTags("img");
 
-        LOG.info("Clean page ...");
+        LOG.info("Cleaning page ...");
         Document cleanedDoc = new Cleaner(safelist).clean(document);
         removeElements(cleanedDoc);
 
@@ -94,9 +94,9 @@ public class JsoupService {
         }
     }
 
-    private File makePageFile(String htmlCode) {
+    public File makePageFile(String htmlCode) {
         LOG.info("Converting document to pdf...");
-        String fileName = "WebPage_" + getDomainName(url) + System.currentTimeMillis();
+        String fileName = String.format("WebPage_%s_%s", getDomainName(url), System.currentTimeMillis());
         File file = ConverterUtils.convertHtmlToPdf(fileName, htmlCode);
         assert file != null;
         LOG.info("Document successfully created in path: " + file.getAbsolutePath());

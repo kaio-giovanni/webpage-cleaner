@@ -37,8 +37,7 @@ public class SerpApiService {
         List<GoogleSearchDto.OrganicResults> results = new ArrayList<>();
         results.add(new GoogleSearchDto.OrganicResults()
                 .setTitle("title")
-//                .setLink("https://www.nytimes.com/live/2022/04/27/world/ukraine-russia-war-news")
-                .setLink("https://www.torcedores.com/noticias/2022/05/diego-ribas-pedido-torcida-flamengo")
+               .setLink("https://www.nytimes.com/live/2022/04/27/world/ukraine-russia-war-news")
                 .setPosition(1)
                 .setDisplayedLink("https://www.google.com/")
                 .setSnippet("snippet")

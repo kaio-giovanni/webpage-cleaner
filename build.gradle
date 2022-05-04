@@ -18,8 +18,8 @@ dependencies {
 	// Jsoup
 	implementation group: 'org.jsoup', name: 'jsoup', version: '1.14.3'
 
-    // Phantomjsdriver
-    implementation group: 'com.codeborne', name: 'phantomjsdriver', version: '1.4.4'
+	// webdrivermanager
+	implementation 'io.github.bonigarcia:webdrivermanager:5.1.1'
 
     // selenium
     implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
@@ -35,6 +35,12 @@ dependencies {
 
 	// itextpdf
 	implementation group: 'com.itextpdf', name: 'html2pdf', version: '3.0.5'
+
+	// openhtmltopdf-core
+	implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-core', version: '1.0.10'
+
+	// openhtmltopdf-pdfbox
+	implementation group: 'com.openhtmltopdf', name: 'openhtmltopdf-pdfbox', version: '1.0.10'
 
 	// Slf4j
 	implementation group: 'org.slf4j', name: 'slf4j-api', version: '1.7.36'

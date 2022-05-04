@@ -1,6 +1,6 @@
 # Web Page Cleaner
 
-This project search web pages in the web by keywords using [SERP API](https://wwww.serpapi.com), PhantomJs to get all page content (static and dynamically content) and Jsoup to clean the web page (remove ads, images, etc).
+This project search web pages in the web by keywords using [SERP API](https://wwww.serpapi.com), WebDriver with Selenium to get all page content (static and dynamically content) and Jsoup to clean the web page (remove ads, images, etc).
 
 #### Project setup
 

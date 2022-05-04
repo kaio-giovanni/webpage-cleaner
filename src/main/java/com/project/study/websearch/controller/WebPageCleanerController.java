@@ -1,10 +1,14 @@
 package com.project.study.websearch.controller;
 
+import java.io.File;
+import java.util.Optional;
+
 import com.project.study.websearch.dto.GoogleSearchDto;
+import com.project.study.websearch.service.ChromeDriverService;
 import com.project.study.websearch.service.JsoupService;
-import com.project.study.websearch.service.PhantomJsService;
 import com.project.study.websearch.service.SerpApiService;
 import com.project.study.websearch.utils.ConverterUtils;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +16,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.File;
-import java.util.Optional;
-
 @RestController
 @RequestMapping(value = "/search")
 public class WebPageCleanerController {
@@ -30,7 +30,7 @@ public class WebPageCleanerController {
         Optional<GoogleSearchDto.OrganicResults> firstResult = dto.getOrganicResults().stream().findFirst();
         if (firstResult.isPresent()) {
             String url = firstResult.get().getLink();
-            String htmlCode = new PhantomJsService().getPageSource(url);
+            String htmlCode = ChromeDriverService.getInstance().getPageSource(url);
             File file = new JsoupService(htmlCode, url).cleanPageFile();
             byte[] binary = ConverterUtils.convertFileToByteArray(file);
             return new ResponseEntity<>(binary, HttpStatus.OK);
@@ -39,7 +39,7 @@ public class WebPageCleanerController {
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping(value = "/clean-page", produces = MediaType.TEXT_HTML_VALUE)
+    @GetMapping(value = "/mocked-page", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<String> getCleanPage() {
         GoogleSearchDto dto = SerpApiService.mockedData();
         String url = dto.getOrganicResults()
@@ -47,7 +47,7 @@ public class WebPageCleanerController {
                 .findFirst()
                 .get()
                 .getLink();
-        String htmlCode = new PhantomJsService().getPageSource(url);
+        String htmlCode = ChromeDriverService.getInstance().getPageSource(url);
         String htmlCleaned = new JsoupService(htmlCode, url).cleanPage();
         return new ResponseEntity<>(htmlCleaned, HttpStatus.OK);
     }
