@@ -1,6 +1,5 @@
 package com.project.study.websearch;
 
-import com.project.study.websearch.utils.PropertiesUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class WebsearchApplication {
 
 	public static void main(String[] args) {
-		PropertiesUtils.loadByDotEnv();
 		SpringApplication.run(WebsearchApplication.class, args);
 	}
 

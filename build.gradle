@@ -22,7 +22,7 @@ dependencies {
 	implementation 'io.github.bonigarcia:webdrivermanager:5.1.1'
 
     // selenium
-    implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
+	implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
 
 	// okhttp
 	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.0'
