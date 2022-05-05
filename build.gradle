@@ -21,7 +21,7 @@ dependencies {
 	// webdrivermanager
 	implementation 'io.github.bonigarcia:webdrivermanager:5.1.1'
 
-    // selenium
+	// selenium
 	implementation 'org.seleniumhq.selenium:selenium-java:3.141.59'
 
 	// okhttp
