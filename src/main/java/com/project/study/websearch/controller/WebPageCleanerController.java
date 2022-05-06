@@ -1,14 +1,10 @@
 package com.project.study.websearch.controller;
 
-import java.io.File;
-import java.util.Optional;
-
-import com.project.study.websearch.dto.GoogleSearchDto;
+import com.project.study.websearch.dto.SerpResponseDto;
 import com.project.study.websearch.service.ChromeDriverService;
+import com.project.study.websearch.service.ExternalApiService;
 import com.project.study.websearch.service.JsoupService;
 import com.project.study.websearch.service.SerpApiService;
-import com.project.study.websearch.utils.ConverterUtils;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,24 +12,30 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
+
 @RestController
 @RequestMapping(value = "/search")
 public class WebPageCleanerController {
 
-    @GetMapping(value = "/clean-file", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getPageFileInCleanMode(@RequestParam(name = "q") String q) {
-        GoogleSearchDto dto = SerpApiService.search(q);
+    private final ChromeDriverService driverService = ChromeDriverService.getInstance();
+    private final ExternalApiService externalApiService = new ExternalApiService();
+    private final SerpApiService serpApiService = new SerpApiService(externalApiService);
+
+    @GetMapping(value = "/clean-file", produces = MediaType.TEXT_HTML_VALUE)
+    public ResponseEntity<String> getPageFileInCleanMode(@RequestParam(name = "q") String q) {
+        SerpResponseDto dto = serpApiService.mockedData(q);
         if (dto == null || dto.getOrganicResults().isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
-        Optional<GoogleSearchDto.OrganicResults> firstResult = dto.getOrganicResults().stream().findFirst();
+        Optional<SerpResponseDto.OrganicResults> firstResult = dto.getOrganicResults().stream().findFirst();
         if (firstResult.isPresent()) {
             String url = firstResult.get().getLink();
-            String htmlCode = ChromeDriverService.getInstance().getPageSource(url);
-            File file = new JsoupService(htmlCode, url).cleanPageFile();
-            byte[] binary = ConverterUtils.convertFileToByteArray(file);
-            return new ResponseEntity<>(binary, HttpStatus.OK);
+            String htmlCode = driverService.getPageSource(url);
+            String htmlCleaned = new JsoupService(htmlCode, url).cleanPage();
+            return new ResponseEntity<>(htmlCleaned, HttpStatus.OK);
         }
 
         return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
@@ -41,13 +43,13 @@ public class WebPageCleanerController {
 
     @GetMapping(value = "/mocked-page", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<String> getCleanPage() {
-        GoogleSearchDto dto = SerpApiService.mockedData();
+        SerpResponseDto dto = serpApiService.mockedData("mocked");
         String url = dto.getOrganicResults()
                 .stream()
                 .findFirst()
                 .get()
                 .getLink();
-        String htmlCode = ChromeDriverService.getInstance().getPageSource(url);
+        String htmlCode = driverService.getPageSource(url);
         String htmlCleaned = new JsoupService(htmlCode, url).cleanPage();
         return new ResponseEntity<>(htmlCleaned, HttpStatus.OK);
     }

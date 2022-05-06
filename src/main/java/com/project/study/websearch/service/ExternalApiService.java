@@ -8,19 +8,19 @@ import java.io.IOException;
 
 public class ExternalApiService {
 
-    private static final OkHttpClient HTTP_CLIENT = new OkHttpClient().newBuilder().build();
+    private final OkHttpClient httpClient;
 
-    private ExternalApiService() {
-        // Do nothing
+    public ExternalApiService() {
+        this.httpClient = new OkHttpClient().newBuilder().build();
     }
 
-    public static Response makeGetRequest(String url) throws IOException {
+    public Response makeGetRequest(String url) throws IOException {
         Request request = new Request.Builder()
                 .url(url)
                 .method("GET", null)
                 .build();
 
-        return HTTP_CLIENT.newCall(request).execute();
+        return httpClient.newCall(request).execute();
     }
 
 }

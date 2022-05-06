@@ -2,11 +2,11 @@ package com.project.study.websearch.dto;
 
 import java.util.List;
 
-public class GoogleSearchDto {
+public class SerpResponseDto {
 
     private List<OrganicResults> organic_results;
 
-    public GoogleSearchDto() {
+    public SerpResponseDto() {
     }
 
     public List<OrganicResults> getOrganicResults() {

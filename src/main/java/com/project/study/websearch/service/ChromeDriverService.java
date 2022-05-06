@@ -1,13 +1,13 @@
 package com.project.study.websearch.service;
 
 import com.project.study.websearch.log.Log;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class ChromeDriverService {
     private static ChromeDriverService service;
@@ -55,10 +55,7 @@ public class ChromeDriverService {
                         .executeScript("return document.readyState")
                         .equals("complete"));
         LOG.info("Getting page source");
-        String htmlCode = webDriver.getPageSource();
-        LOG.info("Closing web driver...");
-        webDriver.quit();
-        return htmlCode;
+        return webDriver.getPageSource();
     }
 
     private Dimension getDimension() {

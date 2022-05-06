@@ -1,7 +1,6 @@
 package com.project.study.websearch.service;
 
 import com.project.study.websearch.log.Log;
-import com.project.study.websearch.utils.ConverterUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -9,7 +8,6 @@ import org.jsoup.safety.Cleaner;
 import org.jsoup.safety.Safelist;
 import org.jsoup.select.Elements;
 
-import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -29,11 +27,6 @@ public class JsoupService {
 
     private Document getDocumentByHtml(String htmlCode) {
         return Jsoup.parse(htmlCode);
-    }
-
-    public File cleanPageFile() {
-        String htmlCode = cleanPage();
-        return makePageFile(htmlCode);
     }
 
     private void refactorDocument() {
@@ -92,15 +85,6 @@ public class JsoupService {
                 div.remove();
             }
         }
-    }
-
-    public File makePageFile(String htmlCode) {
-        LOG.info("Converting document to pdf...");
-        String fileName = String.format("WebPage_%s_%s", getDomainName(url), System.currentTimeMillis());
-        File file = ConverterUtils.convertHtmlToPdf(fileName, htmlCode);
-        assert file != null;
-        LOG.info("Document successfully created in path: " + file.getAbsolutePath());
-        return file;
     }
 
     private String getDomainName(String url) {
