@@ -40,7 +40,7 @@ public class JsoupService {
             if (!href.startsWith("http")) {
                 String refHref = href.startsWith("//") ? protocol + href : domainName + href;
                 link.attr("href", refHref);
-                LOG.info(String.format("Refactoring tag <%s> from %s to %s", link.tagName(), href, refHref));
+                // LOG.info(String.format("Refactoring tag <%s> from %s to %s", link.tagName(), href, refHref));
             }
         }
 

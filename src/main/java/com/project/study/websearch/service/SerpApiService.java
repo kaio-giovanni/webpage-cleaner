@@ -9,6 +9,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SerpApiService {
 
@@ -26,7 +27,10 @@ public class SerpApiService {
         String url = String.format(API_URL_TEMPLATE, ENGINE, keyWordEncoded, DotEnvUtils.getSerpApiKey(), NUM_RESULTS);
 
         try {
-            String json = externalApiService.makeGetRequest(url).body().string();
+            String json = Objects.requireNonNull(externalApiService
+                    .makeGetRequest(url)
+                    .body())
+                    .string();
             return new Gson().fromJson(json, SerpResponseDto.class);
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -36,11 +40,12 @@ public class SerpApiService {
 
     public SerpResponseDto mockedData(String keyWords) {
         List<SerpResponseDto.OrganicResults> results = new ArrayList<>();
+        String link = "https://noticias.uol.com.br/internacional/ultimas-noticias/2022/04/28/russia-ucrania-28-de-abril-dia-64.htm";
         results.add(new SerpResponseDto.OrganicResults()
                 .setTitle("title")
-                .setLink("https://noticias.uol.com.br/internacional/ultimas-noticias/2022/04/28/russia-ucrania-28-de-abril-dia-64.htm")
+                .setLink(link)
                 .setPosition(1)
-                .setDisplayedLink("https://www.google.com/")
+                .setDisplayedLink(link)
                 .setSnippet("snippet")
         );
 
