@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 
 public class JsoupService {
 
-    private static final Log LOG = new Log(JsoupService.class);
     private static final String DOMAIN_NAME_PATTERN = "([a-zA-Z0-9]([a-zA-Z0-9\\-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}";
+    private final Log logger = new Log(JsoupService.class);
 
     private final Document document;
     private final String url;
@@ -30,7 +30,7 @@ public class JsoupService {
     }
 
     private void refactorDocument() {
-        LOG.info("Refactoring document...");
+        logger.info("Refactoring document...");
 
         String protocol = url.split("/")[0];
         String domainName = protocol + "//" + getDomainName(url);
@@ -40,11 +40,12 @@ public class JsoupService {
             if (!href.startsWith("http")) {
                 String refHref = href.startsWith("//") ? protocol + href : domainName + href;
                 link.attr("href", refHref);
-                // LOG.info(String.format("Refactoring tag <%s> from %s to %s", link.tagName(), href, refHref));
+                // LOG.info(String.format("Refactoring tag <%s> from %s to %s", link.tagName(),
+                // href, refHref));
             }
         }
 
-        LOG.info("Document successfully refactored!");
+        logger.info("Document successfully refactored!");
     }
 
     public String cleanPage() {
@@ -66,7 +67,7 @@ public class JsoupService {
                 .addAttributes("li", "style", "class", "id")
                 .removeTags("img");
 
-        LOG.info("Cleaning page ...");
+        logger.info("Cleaning page ...");
         Document cleanedDoc = new Cleaner(safelist).clean(document);
         removeElements(cleanedDoc);
 
@@ -75,9 +76,11 @@ public class JsoupService {
     }
 
     private void removeElements(Document pageDocument) {
-        LOG.info("Removing elements...");
+        logger.info("Removing elements...");
         pageDocument.getElementsByTag("header").remove();
+        logger.info("The header tag has been removed");
         pageDocument.getElementsByTag("iframe").remove();
+        logger.info("The iframe tag has been removed");
 
         Elements divWithoutChildren = pageDocument.getElementsByTag("div");
         for (Element div : divWithoutChildren) {

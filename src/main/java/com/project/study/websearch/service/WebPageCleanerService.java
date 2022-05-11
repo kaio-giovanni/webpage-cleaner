@@ -20,26 +20,40 @@ public class WebPageCleanerService {
         this.serpApiService = new SerpApiService(externalApiService);
     }
 
-    public byte[] getCleanPagePdf(String keyWords) throws IOException {
-        String htmlCleaned = getCleanPage(keyWords);
-        logger.info("Converting to file");
-        File htmlFile = FileUtils.writeHtml(htmlCleaned);
-        assert htmlFile != null;
-        return externalApiService.callPdfConverterApi(htmlFile);
+    private String getCleanPageByUrl(String url) {
+        logger.info("Getting page source code");
+        String htmlCode = driverService.getPageSource(url);
+        logger.info("Cleaning the page...");
+        return new JsoupService(htmlCode, url).cleanPage();
     }
 
-    public String getCleanPage(String keyWords) {
+    private String getCleanPageByKeywords(String keyWords) {
         logger.info("Getting results from web..");
-        SerpResponseDto dto = serpApiService.mockedData(keyWords);
+        SerpResponseDto dto = serpApiService.search(keyWords);
         logger.info("Choosing the best result");
         String url = dto.getOrganicResults()
                 .stream()
                 .findFirst()
                 .get()
                 .getLink();
-        logger.info("Getting page source code");
-        String htmlCode = driverService.getPageSource(url);
-        logger.info("Cleaning the page...");
-        return new JsoupService(htmlCode, url).cleanPage();
+        return getCleanPageByUrl(url);
     }
+
+    private byte[] getPdfByHtmlCode(String htmlCode) throws IOException {
+        logger.info("Converting to file");
+        File htmlFile = FileUtils.writeHtml(htmlCode);
+        assert htmlFile != null;
+        return externalApiService.callPdfConverterApi(htmlFile);
+    }
+
+    public byte[] getCleanPagePdfByKeyWords(String keyWords) throws IOException {
+        String htmlCleaned = getCleanPageByKeywords(keyWords);
+        return getPdfByHtmlCode(htmlCleaned);
+    }
+
+    public byte[] getCleanPagePdfByUrl(String url) throws IOException {
+        String htmlCleaned = getCleanPageByUrl(url);
+        return getPdfByHtmlCode(htmlCleaned);
+    }
+
 }
