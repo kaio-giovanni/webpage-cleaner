@@ -1,15 +1,13 @@
 package com.project.study.websearch.service;
 
-import com.google.gson.Gson;
-import com.project.study.websearch.dto.SerpResponseDto;
-import com.project.study.websearch.utils.DotEnvUtils;
-
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+
+import com.google.gson.Gson;
+import com.project.study.websearch.dto.SerpResponseDto;
+import com.project.study.websearch.utils.DotEnvUtils;
 
 public class SerpApiService {
 
@@ -36,21 +34,5 @@ public class SerpApiService {
             ex.printStackTrace();
             return null;
         }
-    }
-
-    public SerpResponseDto mockedData(String keyWords) {
-        List<SerpResponseDto.OrganicResults> results = new ArrayList<>();
-        String link = "https://noticias.uol.com.br/internacional/ultimas-noticias/2022/04/28/russia-ucrania-28-de-abril-dia-64.htm";
-        results.add(new SerpResponseDto.OrganicResults()
-                .setTitle("title")
-                .setLink(link)
-                .setPosition(1)
-                .setDisplayedLink(link)
-                .setSnippet("snippet")
-        );
-
-        SerpResponseDto dto = new SerpResponseDto();
-        dto.setOrganicResults(results);
-        return dto;
     }
 }

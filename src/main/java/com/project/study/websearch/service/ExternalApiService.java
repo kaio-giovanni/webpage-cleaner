@@ -10,13 +10,14 @@ import java.util.concurrent.TimeUnit;
 public class ExternalApiService {
 
     private static final MediaType TEXT_HTML = MediaType.parse("text/html; charset=utf-8");
-    private static final long TIMEOUT = 15;
+    private static final long TIMEOUT = 60;
     private final OkHttpClient httpClient;
 
     public ExternalApiService() {
         this.httpClient = new OkHttpClient()
                 .newBuilder()
                 .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(TIMEOUT, TimeUnit.SECONDS)
                 .build();
     }
 

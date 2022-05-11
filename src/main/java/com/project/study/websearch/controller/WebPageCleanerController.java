@@ -12,21 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @RestController
-@RequestMapping(value = "/search")
+@RequestMapping(value = "/clean")
 public class WebPageCleanerController {
 
     private final WebPageCleanerService service = new WebPageCleanerService();
 
-    @GetMapping(value = "/clean-page", produces = MediaType.TEXT_HTML_VALUE)
-    public ResponseEntity<String> getPageFileInCleanMode(@RequestParam(name = "q") String q) {
-        String htmlCode = service.getCleanPage(q);
-        return new ResponseEntity<>(htmlCode, HttpStatus.OK);
+    @GetMapping(value = "/page", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getCleanPage(@RequestParam(name = "url") String url) throws IOException {
+        byte[] content = service.getCleanPagePdfByUrl(url);
+        return new ResponseEntity<>(content, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/clean-file", produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getCleanPage(@RequestParam(name = "q") String q) throws IOException {
-        byte[] binary = service.getCleanPagePdf(q);
-        return new ResponseEntity<>(binary, HttpStatus.OK);
+    @GetMapping(value = "/page/search", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getPageFileInCleanMode(@RequestParam(name = "q") String query)
+            throws IOException {
+        byte[] content = service.getCleanPagePdfByKeyWords(query);
+        return new ResponseEntity<>(content, HttpStatus.OK);
     }
 
 }
