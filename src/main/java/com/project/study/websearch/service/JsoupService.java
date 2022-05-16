@@ -67,27 +67,21 @@ public class JsoupService {
                 .addAttributes("li", "style", "class", "id")
                 .removeTags("img");
 
+        logger.info("Removing elements...");
+        document.getElementsByTag("header").remove();
+        logger.info("The header tag has been removed");
+        document.getElementsByTag("iframe").remove();
+        logger.info("The iframe tag has been removed");
+        document.getElementsByTag("nav").remove();
+        logger.info("The nav tag has been removed");
+        document.getElementsByTag("footer").remove();
+        logger.info("The footer tag has been removed");
+
         logger.info("Cleaning page ...");
         Document cleanedDoc = new Cleaner(safelist).clean(document);
-        removeElements(cleanedDoc);
 
         cleanedDoc.tagName("html").insertChildren(0, headElement);
         return cleanedDoc.outerHtml();
-    }
-
-    private void removeElements(Document pageDocument) {
-        logger.info("Removing elements...");
-        pageDocument.getElementsByTag("header").remove();
-        logger.info("The header tag has been removed");
-        pageDocument.getElementsByTag("iframe").remove();
-        logger.info("The iframe tag has been removed");
-
-        Elements divWithoutChildren = pageDocument.getElementsByTag("div");
-        for (Element div : divWithoutChildren) {
-            if (div.childNodeSize() == 0) {
-                div.remove();
-            }
-        }
     }
 
     private String getDomainName(String url) {
