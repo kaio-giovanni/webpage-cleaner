@@ -7,7 +7,13 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.util.ResourceUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class ChromeDriverService {
     private static ChromeDriverService service;
@@ -36,14 +42,22 @@ public class ChromeDriverService {
 
     private ChromeOptions getOptions() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        options.addArguments("start-maximized");
-        options.addArguments("start-fullscreen");
-        options.addArguments("disable-infobars");
-        options.addArguments("--disable-extensions");
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--no-sandbox");
+        options.addExtensions(getAdBlockerExtension());
+        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+        capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+        options.merge(capabilities);
         return options;
+    }
+
+    private File getAdBlockerExtension() {
+        try {
+            return ResourceUtils.getFile("classpath:chrome/extensions/adBlocker.crx");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
     }
 
     public String getPageSource(String url) {
@@ -51,11 +65,12 @@ public class ChromeDriverService {
         webDriver.navigate().to(url);
         LOG.info("Waiting for the page to fully load");
         wait.until(
-                webDriver -> ((JavascriptExecutor) webDriver)
+                driver -> ((JavascriptExecutor) driver)
                         .executeScript("return document.readyState")
                         .equals("complete"));
         LOG.info("Getting page source");
-        return webDriver.getPageSource();
+        byte[] pageSourceEncoding = webDriver.getPageSource().getBytes(StandardCharsets.UTF_8);
+        return new String(pageSourceEncoding);
     }
 
     private Dimension getDimension() {

@@ -1,11 +1,14 @@
 package com.project.study.websearch.service;
 
 import com.project.study.websearch.dto.SerpResponseDto;
+import com.project.study.websearch.exception.ResourceNotFoundException;
 import com.project.study.websearch.log.Log;
 import com.project.study.websearch.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Optional;
 
 public class WebPageCleanerService {
 
@@ -20,23 +23,28 @@ public class WebPageCleanerService {
         this.serpApiService = new SerpApiService(externalApiService);
     }
 
-    private String getCleanPageByUrl(String url) {
+    private String getCleanPageByUrl(String url) throws URISyntaxException {
         logger.info("Getting page source code");
         String htmlCode = driverService.getPageSource(url);
         logger.info("Cleaning the page...");
         return new JsoupService(htmlCode, url).cleanPage();
     }
 
-    private String getCleanPageByKeywords(String keyWords) {
+    private String getCleanPageByKeywords(String keyWords) throws URISyntaxException {
         logger.info("Getting results from web..");
         SerpResponseDto dto = serpApiService.search(keyWords);
         logger.info("Choosing the best result");
-        String url = dto.getOrganicResults()
+        Optional<SerpResponseDto.OrganicResults> result = dto.getOrganicResults()
                 .stream()
-                .findFirst()
-                .get()
-                .getLink();
-        return getCleanPageByUrl(url);
+                .findFirst();
+        if (result.isPresent()) {
+            String url = result
+                    .get()
+                    .getLink();
+            return getCleanPageByUrl(url);
+        }
+
+        throw new ResourceNotFoundException("Resource not found for this search");
     }
 
     private byte[] getPdfByHtmlCode(String htmlCode) throws IOException {
@@ -46,12 +54,12 @@ public class WebPageCleanerService {
         return externalApiService.callPdfConverterApi(htmlFile);
     }
 
-    public byte[] getCleanPagePdfByKeyWords(String keyWords) throws IOException {
+    public byte[] getCleanPagePdfByKeyWords(String keyWords) throws IOException, URISyntaxException {
         String htmlCleaned = getCleanPageByKeywords(keyWords);
         return getPdfByHtmlCode(htmlCleaned);
     }
 
-    public byte[] getCleanPagePdfByUrl(String url) throws IOException {
+    public byte[] getCleanPagePdfByUrl(String url) throws IOException, URISyntaxException {
         String htmlCleaned = getCleanPageByUrl(url);
         return getPdfByHtmlCode(htmlCleaned);
     }
