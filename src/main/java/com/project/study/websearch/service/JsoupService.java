@@ -57,28 +57,7 @@ public class JsoupService {
 
     public String cleanPage() throws URISyntaxException {
         refactorDocument();
-        Element headElement = document.head();
-        final String style = "style";
-        final String _class = "class";
-        final String id = "id";
-        Safelist safelist = Safelist.relaxed()
-                .addTags("main", "section", "article", "style", "img", "picture", "source", "span", "nav", "aside",
-                        "body", "time", "table", "thead", "tbody", "tfoot", "td", "th", "tr")
-                .addAttributes("main", style, _class, id)
-                .addAttributes("section", style, _class, id)
-                .addAttributes("article", style, _class, id)
-                .addAttributes("nav", style, _class, id)
-                .addAttributes("div", _class, style, id)
-                .addAttributes("aside", _class, style, id)
-                .addAttributes("body", _class, style, id)
-                .addAttributes("span", style, _class, id)
-                .addAttributes("time", _class, style, id)
-                .addAttributes("table", style, _class, id)
-                .addAttributes("a", style, _class, id)
-                .addAttributes("p", style, _class, id)
-                .addAttributes("ul", style, _class, id)
-                .addAttributes("ol", style, _class, id)
-                .addAttributes("li", style, _class, id);
+        Safelist safelist = Safelist.simpleText();
 
         logger.info("Removing elements...");
         document.getElementsByTag("header").remove();
@@ -90,8 +69,6 @@ public class JsoupService {
 
         logger.info("Cleaning page ...");
         Document cleanedDoc = new Cleaner(safelist).clean(document);
-
-        cleanedDoc.tagName("html").insertChildren(0, headElement);
-        return cleanedDoc.outerHtml().replace("\u00a0", "");
+        return cleanedDoc.outerHtml();
     }
 }

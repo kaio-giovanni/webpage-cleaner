@@ -1,29 +1,39 @@
 package com.project.study.websearch.dto;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class SerpResponseDto {
 
-    private List<OrganicResults> organic_results;
+    @SerializedName("organic_results")
+    private List<OrganicResults> organicResults;
 
     public SerpResponseDto() {
+        // do nothing
     }
 
     public List<OrganicResults> getOrganicResults() {
-        return organic_results;
+        return organicResults;
     }
 
-    public void setOrganicResults(List<OrganicResults> organic_results) {
-        this.organic_results = organic_results;
+    public void setOrganicResults(List<OrganicResults> organicResults) {
+        this.organicResults = organicResults;
     }
 
     public static class OrganicResults {
+        @SerializedName("position")
         private int position;
+        @SerializedName("title")
         private String title;
+        @SerializedName("link")
         private String link;
-        private String displayed_link;
+        @SerializedName("displayed_link")
+        private String displayedLink;
+        @SerializedName("snippet")
         private String snippet;
-        private String[] snippet_highlighted_words;
+        @SerializedName("snippet_highlighted_words")
+        private String[] snippetHighlightedWords;
 
         public OrganicResults() {
         }
@@ -55,12 +65,12 @@ public class SerpResponseDto {
             return this;
         }
 
-        public String getDisplayed_link() {
-            return displayed_link;
+        public String getDisplayedLink() {
+            return displayedLink;
         }
 
-        public OrganicResults setDisplayedLink(String displayed_link) {
-            this.displayed_link = displayed_link;
+        public OrganicResults setDisplayedLink(String displayedLink) {
+            this.displayedLink = displayedLink;
             return this;
         }
 
@@ -74,11 +84,11 @@ public class SerpResponseDto {
         }
 
         public String[] getSnippetHighlightedWords() {
-            return snippet_highlighted_words;
+            return snippetHighlightedWords;
         }
 
-        public OrganicResults setSnippetHighlightedWords(String[] snippet_highlighted_words) {
-            this.snippet_highlighted_words = snippet_highlighted_words;
+        public OrganicResults setSnippetHighlightedWords(String[] snippetHighlightedWords) {
+            this.snippetHighlightedWords = snippetHighlightedWords;
             return this;
         }
     }
